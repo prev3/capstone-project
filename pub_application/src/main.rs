@@ -45,6 +45,7 @@ async fn run(config: ClientConfig) -> Result<(), Status> {
     // Wait for all publish task finish
     for task in tasks {
         let message_id = task.await.unwrap()?;
+        println!("{}", message_id);
     }
 
     // Wait for publishers in topic finish.
