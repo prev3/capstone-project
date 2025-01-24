@@ -1,3 +1,4 @@
+import sqlite3
 import threading
 import tkinter
 import tkinter.ttk
@@ -10,12 +11,34 @@ config = dotenv.dotenv_values("config.env")
 
 keep_subscription_alive = True
 
+DATABASE_TABLE_NAME = "messages"
+
+def get_database_cursor():
+    database_connection = sqlite3.connect("demo.db")
+    database_cursor = database_connection.cursor()
+    table_check = database_cursor.execute("SELECT name FROM sqlite_master WHERE name='messages'")
+    if table_check and not table_check.fetchone():
+        database_cursor.execute("CREATE TABLE messages(version, item_id, location, quantity, transaction_datetime, transation_number)")
+    return (database_connection, database_cursor)
+
 def init_subscription() -> None:
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(config["project_id"], config["subscription_id"]) #`projects/{project_id}/subscriptions/{subscription_id}`
 
     def callback(message: pubsub_v1.subscriber.message.Message) -> None:
         result_box.insert(tkinter.END, f"Received {message}.\n")
+        message_attributes = message.attributes
+        data = [
+            message_attributes["version"],
+            message_attributes["item_id"],
+            message_attributes["location"],
+            message_attributes["quantity"],
+            message_attributes["transation_datetime"],
+            message_attributes["transaction_number"],
+        ]
+        (database_connection, database_cursor) = get_database_cursor()
+        database_cursor.execute("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?)", data)
+        database_connection.commit()
         message.ack()
 
     streaming_pull_future = subscriber.subscribe(subscription_path, callback = callback)
