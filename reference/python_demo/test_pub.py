@@ -1,3 +1,4 @@
+import threading
 import tkinter
 import tkinter.ttk
 import traceback
@@ -38,7 +39,7 @@ result_box.grid(column = 0, row = 0, columnspan = 2)
 message = "test message"
 test_attribute = "test_attribute"
 
-publish_button = tkinter.ttk.Button(frame, text = "Publish", command = lambda: run_publish(message, test_attribute))
+publish_button = tkinter.ttk.Button(frame, text = "Publish", command = lambda: threading.Thread(target = lambda: run_publish(message, test_attribute)).start())
 publish_button.grid(column = 0, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
 
 clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
