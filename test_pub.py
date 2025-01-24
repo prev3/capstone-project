@@ -2,15 +2,14 @@ import tkinter
 import tkinter.ttk
 import traceback
 
+import dotenv
 from google.cloud import pubsub_v1
 
+config = dotenv.dotenv_values("config.env")
 
 def publish_message(message: str, test_attribute: str) -> str:
     publisher = pubsub_v1.PublisherClient()
-    topic_name = "projects/{project_id}/topics/{topic}".format(
-        project_id = "alpine-eon-448115-q1",
-        topic = "Test_Topic",
-    )
+    topic_name = "projects/" + config["project_id"] + "/topics/" + config["topic"]
     future = publisher.publish(topic_name, message.encode("UTF-8"), test_attribute = test_attribute)
     return future.result()
 

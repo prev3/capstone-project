@@ -3,16 +3,16 @@ import tkinter
 import tkinter.ttk
 import traceback
 
+import dotenv
 from google.cloud import pubsub_v1
+
+config = dotenv.dotenv_values("config.env")
 
 keep_subscription_alive = True
 
 def init_subscription() -> None:
-    project_id = "alpine-eon-448115-q1"
-    subscription_id = "Test_Topic-sub"
-
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_id) #`projects/{project_id}/subscriptions/{subscription_id}`
+    subscription_path = subscriber.subscription_path(config["project_id"], config["subscription_id"]) #`projects/{project_id}/subscriptions/{subscription_id}`
 
     def callback(message: pubsub_v1.subscriber.message.Message) -> None:
         result_box.insert(tkinter.END, f"Received {message}.\n")
