@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Run `setup_venv.sh`.
+1. Run `setup_venv.sh` and `setup_config.sh`.
 
     On Windows you may need to run the commands from this script individually.
 
