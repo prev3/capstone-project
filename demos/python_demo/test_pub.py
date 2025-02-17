@@ -40,6 +40,7 @@ result_box.grid(column = 0, row = 0, columnspan = 2)
 message = "test message"
 attributes = {
     "version": "1",
+    "message_id": "1",
     "item_id": "1",
     "location": "Georgia",
     "quantity": "10",

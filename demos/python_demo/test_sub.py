@@ -13,12 +13,14 @@ keep_subscription_alive = True
 
 DATABASE_TABLE_NAME = "messages"
 
-def get_database_cursor():
+known_message_ids = []
+
+def get_database_cursor() -> None:
     database_connection = sqlite3.connect("demo.db")
     database_cursor = database_connection.cursor()
     table_check = database_cursor.execute("SELECT name FROM sqlite_master WHERE name='messages'")
     if table_check and not table_check.fetchone():
-        database_cursor.execute("CREATE TABLE messages(version, item_id, location, quantity, transaction_datetime, transation_number)")
+        database_cursor.execute("CREATE TABLE messages(version, message_id, item_id, location, quantity, transaction_datetime, transation_number, duplicate)")
     return (database_connection, database_cursor)
 
 def init_subscription() -> None:
@@ -28,16 +30,22 @@ def init_subscription() -> None:
     def callback(message: pubsub_v1.subscriber.message.Message) -> None:
         result_box.insert(tkinter.END, f"Received {message}.\n")
         message_attributes = message.attributes
+        duplicate = False
+        if message_attributes["message_id"] in known_message_ids:
+            duplicate = True
+        known_message_ids.append(message_attributes["message_id"])
         data = [
             message_attributes["version"],
+            message_attributes["message_id"],
             message_attributes["item_id"],
             message_attributes["location"],
             message_attributes["quantity"],
             message_attributes["transation_datetime"],
             message_attributes["transaction_number"],
+            duplicate,
         ]
         (database_connection, database_cursor) = get_database_cursor()
-        database_cursor.execute("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?)", data)
+        database_cursor.execute("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?, ?, ?)", data)
         database_connection.commit()
         message.ack()
 
