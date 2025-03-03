@@ -20,7 +20,7 @@ def get_database_cursor() -> None:
     database_cursor = database_connection.cursor()
     table_check = database_cursor.execute("SELECT name FROM sqlite_master WHERE name='messages'")
     if table_check and not table_check.fetchone():
-        database_cursor.execute("CREATE TABLE messages(version, message_id, item_id, location, quantity, transaction_datetime, transation_number, duplicate)")
+        database_cursor.execute("CREATE TABLE messages(message_id, version, item_id, location, quantity, transaction_datetime, transation_number, duplicate)")
     return (database_connection, database_cursor)
 
 def init_subscription() -> None:
@@ -35,8 +35,8 @@ def init_subscription() -> None:
             duplicate = True
         known_message_ids.append(message_attributes["message_id"])
         data = [
-            message_attributes["version"],
             message_attributes["message_id"],
+            message_attributes["version"],
             message_attributes["item_id"],
             message_attributes["location"],
             message_attributes["quantity"],
