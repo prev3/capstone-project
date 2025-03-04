@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import threading
 import tkinter
@@ -29,19 +30,20 @@ def init_subscription() -> None:
 
     def callback(message: pubsub_v1.subscriber.message.Message) -> None:
         result_box.insert(tkinter.END, f"Received {message}.\n")
+        message_data = json.loads(message.data)
         message_attributes = message.attributes
         duplicate = False
-        if message_attributes["message_id"] in known_message_ids:
+        if message_data["message_id"] in known_message_ids:
             duplicate = True
-        known_message_ids.append(message_attributes["message_id"])
+        known_message_ids.append(message_data["message_id"])
         data = [
-            message_attributes["message_id"],
+            message_data["message_id"],
             message_attributes["version"],
-            message_attributes["item_id"],
-            message_attributes["location"],
-            message_attributes["quantity"],
-            message_attributes["transation_datetime"],
-            message_attributes["transaction_number"],
+            message_data["item_id"],
+            message_data["location"],
+            message_data["quantity"],
+            message_data["transation_datetime"],
+            message_data["transaction_number"],
             duplicate,
         ]
         (database_connection, database_cursor) = get_database_cursor()
