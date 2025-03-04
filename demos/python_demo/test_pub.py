@@ -18,6 +18,7 @@ def publish_message(message: str, attributes: str) -> str:
 
 def run_publish(message: str, test_attribute: str) -> None:
     try:
+        message["message_id"] = message_id_entry.get()
         publish_button.config(state = tkinter.DISABLED)
         result = publish_message(message, test_attribute)
         result_box.insert(tkinter.END, result + "\n")
@@ -50,11 +51,18 @@ attributes = {
     "version": "1",
 }
 
+message_id_label = tkinter.Label(frame, text = "Message ID:")
+message_id_label.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
+
+message_id_entry = tkinter.Entry(frame)
+message_id_entry.insert(0, "1")
+message_id_entry.grid(column = 1, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
+
 publish_button = tkinter.ttk.Button(frame, text = "Publish", command = lambda: threading.Thread(target = lambda: run_publish(message, attributes)).start())
-publish_button.grid(column = 0, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
+publish_button.grid(column = 0, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
-clear_button.grid(column = 1, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
+clear_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
