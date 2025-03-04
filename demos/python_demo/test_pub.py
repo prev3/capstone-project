@@ -1,5 +1,6 @@
 import datetime
 import json
+import random
 import threading
 import tkinter
 import tkinter.ttk
@@ -19,6 +20,11 @@ def publish_message(message: str, attributes: str) -> str:
 def run_publish(message: str, test_attribute: str) -> None:
     try:
         message["message_id"] = message_id_entry.get()
+        message["item_id"] = item_id_entry.get()
+        message["location"] = location_entry.get()
+        message["quantity"] = quantity_entry.get()
+        message["transation_datetime"] = str(datetime.datetime.now(tz=datetime.timezone.utc))
+        message["transaction_number"] = random.randint(1, 10000)
         publish_button.config(state = tkinter.DISABLED)
         result = publish_message(message, test_attribute)
         result_box.insert(tkinter.END, result + "\n")
@@ -40,12 +46,12 @@ result_box = tkinter.Text(frame)
 result_box.grid(column = 0, row = 0, columnspan = 2)
 
 message = {
-    "message_id": "1",
-    "item_id": "1",
-    "location": "Georgia",
-    "quantity": "10",
-    "transation_datetime": str(datetime.datetime.now(tz=datetime.timezone.utc)),
-    "transaction_number": "341",
+    "message_id": None,
+    "item_id": None,
+    "location": None,
+    "quantity": None,
+    "transation_datetime": None,
+    "transaction_number": None,
 }
 attributes = {
     "version": "1",
@@ -53,16 +59,33 @@ attributes = {
 
 message_id_label = tkinter.Label(frame, text = "Message ID:")
 message_id_label.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
-
 message_id_entry = tkinter.Entry(frame)
 message_id_entry.insert(0, "1")
 message_id_entry.grid(column = 1, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
+item_id_label = tkinter.Label(frame, text = "Item ID:")
+item_id_label.grid(column = 0, row = 2, ipady = 0, pady = 5, sticky = "EWNS")
+item_id_entry = tkinter.Entry(frame)
+item_id_entry.insert(0, "1")
+item_id_entry.grid(column = 1, row = 2, ipady = 0, pady = 5, sticky = "EWNS")
+
+location_label = tkinter.Label(frame, text = "Location:")
+location_label.grid(column = 0, row = 3, ipady = 0, pady = 5, sticky = "EWNS")
+location_entry = tkinter.Entry(frame)
+location_entry.insert(0, "Georgia")
+location_entry.grid(column = 1, row = 3, ipady = 0, pady = 5, sticky = "EWNS")
+
+quantity_label = tkinter.Label(frame, text = "Quantity:")
+quantity_label.grid(column = 0, row = 4, ipady = 0, pady = 5, sticky = "EWNS")
+quantity_entry = tkinter.Entry(frame)
+quantity_entry.insert(0, "10")
+quantity_entry.grid(column = 1, row = 4, ipady = 0, pady = 5, sticky = "EWNS")
+
 publish_button = tkinter.ttk.Button(frame, text = "Publish", command = lambda: threading.Thread(target = lambda: run_publish(message, attributes)).start())
-publish_button.grid(column = 0, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+publish_button.grid(column = 0, row = 5, ipady = 25, pady = 5, sticky = "EWNS")
 
 clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
-clear_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+clear_button.grid(column = 1, row = 5, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
