@@ -11,6 +11,13 @@ from google.cloud import pubsub_v1
 
 config = dotenv.dotenv_values("config.env")
 
+def log_debug(message: str) -> None:
+    print(message)  # noqa: T201
+    try:
+        result_box.insert(tkinter.END, str(message) + "\n")
+    except Exception:
+        print("Failed to insert message into ui")  # noqa: T201
+
 def publish_message(message: str, attributes: str) -> str:
     publisher = pubsub_v1.PublisherClient()
     topic_name = "projects/" + config["project_id"] + "/topics/" + config["topic"]
@@ -18,6 +25,7 @@ def publish_message(message: str, attributes: str) -> str:
     return future.result()
 
 def run_publish(message: str, test_attribute: str) -> None:
+    log_debug("Message publish requested")
     try:
         message["message_id"] = message_id_entry.get()
         message["item_id"] = item_id_entry.get()
@@ -26,8 +34,10 @@ def run_publish(message: str, test_attribute: str) -> None:
         message["transation_datetime"] = str(datetime.datetime.now(tz=datetime.timezone.utc))
         message["transaction_number"] = random.randint(1, 10000)
         publish_button.config(state = tkinter.DISABLED)
+        log_debug("Publishing message")
+        log_debug(message)
         result = publish_message(message, test_attribute)
-        result_box.insert(tkinter.END, result + "\n")
+        log_debug(result)
         publish_button.config(state = tkinter.ACTIVE)
     except Exception:
         result_box.insert(tkinter.END, traceback.format_exc())
