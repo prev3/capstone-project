@@ -56,7 +56,7 @@ def init_subscription() -> None:
                 try:
                     streaming_pull_future.result(timeout = 60)
                 except TimeoutError:
-                    result_box.insert(tkinter.END, "Timeout hit, retrying\n")
+                    result_box.insert(tkinter.END, "Timeout hit, continuing stream if unsubscribe was not requested\n")
         except Exception:
             result_box.insert(tkinter.END, traceback.format_exc())
 
