@@ -14,8 +14,6 @@ keep_subscription_alive = True
 
 DATABASE_TABLE_NAME = "messages"
 
-known_message_ids = []
-
 def get_database_cursor() -> None:
     database_connection = sqlite3.connect("demo.db")
     database_cursor = database_connection.cursor()
@@ -32,10 +30,8 @@ def init_subscription() -> None:
         result_box.insert(tkinter.END, f"Received {message}.\n")
         message_data = json.loads(message.data)
         message_attributes = message.attributes
-        duplicate = False
-        if message_data["message_id"] in known_message_ids:
-            duplicate = True
-        known_message_ids.append(message_data["message_id"])
+        (database_connection, database_cursor) = get_database_cursor()
+        duplicate = bool(len(database_cursor.execute("SELECT * FROM messages WHERE message_id=?", str(message_data["message_id"])).fetchall()))
         data = [
             message_data["message_id"],
             message_attributes["version"],
@@ -46,7 +42,6 @@ def init_subscription() -> None:
             message_data["transaction_number"],
             duplicate,
         ]
-        (database_connection, database_cursor) = get_database_cursor()
         database_cursor.execute("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?, ?, ?)", data)
         database_connection.commit()
         message.ack()

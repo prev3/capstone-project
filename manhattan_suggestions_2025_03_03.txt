@@ -1,4 +1,4 @@
 (fixed) 1. don't dump all the json data into the attributes, serialize a json into data instead
    in `run_publish(message, attributes)` put it in the `message` variable
-2. query database when checking for duplicates instead of storing seen messages in an array and only dupe checking messages seen in that session
+(fixed) 2. query database when checking for duplicates instead of storing seen messages in an array and only dupe checking messages seen in that session
 (fixed) 3. add a way to set the message id in the publish ui (possibly add ways to set every attribute)
