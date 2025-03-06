@@ -109,14 +109,20 @@ root.title("Test Sub")
 frame = tkinter.ttk.Frame(root, padding = 10)
 frame.grid(sticky = "EWNS")
 
+treeview_frame = tkinter.ttk.Frame(frame)
+treeview_frame.grid(columnspan = 3, sticky = "EWNS")
+
 treeview_columns = ["message_id", "version", "item_id", "location", "quantity", "transaction_datetime", "transation_number", "duplicate"]
-database_treeview = tkinter.ttk.Treeview(frame, columns = treeview_columns, show = "headings")
+database_treeview = tkinter.ttk.Treeview(treeview_frame, columns = treeview_columns, show = "headings")
 for i, treeview_column in enumerate(treeview_columns):
     database_treeview.column("#" + str(i + 1), width = len(treeview_column) * 10)
     database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title(), command = lambda column = treeview_column: sort_treeview(database_treeview, column, False))
-database_treeview.grid(column = 0, row = 0, columnspan = 3)
-
+database_treeview.grid(column = 0, row = 0, sticky = "EWNS")
 insert_treeview_data(database_treeview)
+
+treeview_scrollabar = tkinter.ttk.Scrollbar(treeview_frame, orient = "vertical", command = database_treeview.yview)
+treeview_scrollabar.grid(column = 1, row = 0, sticky = "EWNS")
+database_treeview.configure(yscrollcommand = treeview_scrollabar.set)
 
 result_box = tkinter.Text(frame, height = 5)
 result_box.grid(column = 0, row = 1, columnspan = 3, sticky = "EWNS")
