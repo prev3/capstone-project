@@ -44,6 +44,7 @@ def init_subscription() -> None:
         ]
         database_cursor.execute("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?, ?, ?)", data)
         database_connection.commit()
+        reset_treeview()
         message.ack()
 
     streaming_pull_future = subscriber.subscribe(subscription_path, callback = callback)
@@ -77,6 +78,23 @@ def request_thread_run(thread) -> None:
 def clear_text() -> None:
     result_box.delete(0.0, tkinter.END)
 
+def reset_treeview() -> None:
+    database_treeview.delete(*database_treeview.get_children())
+    insert_treeview_data(database_treeview)
+
+def insert_treeview_data(treeview: tkinter.ttk.Treeview) -> None:
+    (database_connection, database_cursor) = get_database_cursor()
+    treeview_data = database_cursor.execute("SELECT * FROM messages").fetchall()
+    for database_treeview_value in treeview_data:
+        database_treeview.insert("", "end", text = "1", values = database_treeview_value)
+
+def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: bool) -> None:
+    data = [(treeview.set(item, column_name), item) for item in treeview.get_children("")]
+    data.sort(reverse = descending)
+    for index, (_, item) in enumerate(data):
+        treeview.move(item, "", index)
+    treeview.heading(column_name, command = lambda: sort_treeview(treeview, column_name, not descending))
+
 root = tkinter.Tk()
 root.title("Test Sub")
 
@@ -87,8 +105,10 @@ treeview_columns = ["message_id", "version", "item_id", "location", "quantity", 
 database_treeview = tkinter.ttk.Treeview(frame, columns = treeview_columns, show = "headings")
 for i, treeview_column in enumerate(treeview_columns):
     database_treeview.column("#" + str(i + 1), width = len(treeview_column) * 10)
-    database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title())
+    database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title(), command = lambda column = treeview_column: sort_treeview(database_treeview, column, False))
 database_treeview.grid(column = 0, row = 0, columnspan = 3)
+
+insert_treeview_data(database_treeview)
 
 result_box = tkinter.Text(frame, height = 5)
 result_box.grid(column = 0, row = 1, columnspan = 3, sticky = "EWNS")
@@ -100,8 +120,8 @@ subscribe_button.grid(column = 0, row = 2, ipady = 25, pady = 5, sticky = "EWNS"
 unsubscribe_button = tkinter.ttk.Button(frame, text = "Unsubscribe", command = kill_subscription)
 unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
-clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
-clear_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+clear_text_button = tkinter.ttk.Button(frame, text = "Clear Text", command = clear_text)
+clear_text_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
