@@ -99,6 +99,13 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
 
 def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: bool) -> None:
     data = [(treeview.set(item, column_name), item) for item in treeview.get_children("")]
+
+    i = 0
+    while i < len(data):
+        if data[i][0].isdigit():
+            data[i] = (int(data[i][0]), data[i][1])
+        i += 1
+
     data.sort(reverse = descending)
     for index, (_, item) in enumerate(data):
         treeview.move(item, "", index)
