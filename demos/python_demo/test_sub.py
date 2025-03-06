@@ -14,6 +14,13 @@ keep_subscription_alive = True
 
 DATABASE_TABLE_NAME = "messages"
 
+def log_debug(message: str) -> None:
+    print(message)  # noqa: T201
+    try:
+        result_box.insert(tkinter.END, str(message) + "\n")
+    except Exception:
+        print("Failed to insert message into ui")  # noqa: T201
+
 def get_database_cursor() -> None:
     database_connection = sqlite3.connect("demo.db")
     database_cursor = database_connection.cursor()
@@ -27,7 +34,7 @@ def init_subscription() -> None:
     subscription_path = subscriber.subscription_path(config["project_id"], config["subscription_id"]) #`projects/{project_id}/subscriptions/{subscription_id}`
 
     def callback(message: pubsub_v1.subscriber.message.Message) -> None:
-        result_box.insert(tkinter.END, f"Received {message}.\n")
+        log_debug(f"Received {message}.")
         message_data = json.loads(message.data)
         message_attributes = message.attributes
         (database_connection, database_cursor) = get_database_cursor()
@@ -48,32 +55,33 @@ def init_subscription() -> None:
         message.ack()
 
     streaming_pull_future = subscriber.subscribe(subscription_path, callback = callback)
-    result_box.insert(tkinter.END, f"Listening for messages on {subscription_path}..\n")
+    log_debug(f"Listening for messages on {subscription_path}..")
 
     with subscriber:
         try:
             while keep_subscription_alive:
                 try:
-                    streaming_pull_future.result(timeout = 60)
+                    streaming_pull_future.result(timeout = 10)
                 except TimeoutError:
-                    result_box.insert(tkinter.END, "Timeout hit, continuing stream if unsubscribe was not requested\n")
+                    log_debug("Timeout hit, continuing stream if unsubscribe was not requested")
         except Exception:
-            result_box.insert(tkinter.END, traceback.format_exc())
+            log_debug(traceback.format_exc())
 
-        result_box.insert(tkinter.END, "Unsubscribing\n")
+        log_debug("Unsubscribing")
         streaming_pull_future.cancel()
         streaming_pull_future.result()
+        log_debug("Unsubscribed")
 
 def kill_subscription() -> None:
     global keep_subscription_alive
-    result_box.insert(tkinter.END, "Unsubscribe Requested, thread will exit after timeout\n")
+    log_debug("Unsubscribe Requested, thread will exit after timeout")
     keep_subscription_alive = False
 
 def request_thread_run(thread) -> None:
     if init_thread and not init_thread.is_alive():
         thread.start()
     else:
-        result_box.insert(tkinter.END, "Declining thread start request thread does not exist or is already running\n")
+        log_debug("Declining thread start request thread does not exist or is already running")
 
 def clear_text() -> None:
     result_box.delete(0.0, tkinter.END)
