@@ -90,7 +90,7 @@ def reset_treeview() -> None:
     database_treeview.delete(*database_treeview.get_children())
     insert_treeview_data(database_treeview)
 
-def insert_treeview_data(treeview: tkinter.ttk.Treeview) -> None:
+def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
     (database_connection, database_cursor) = get_database_cursor()
     treeview_data = database_cursor.execute("SELECT * FROM messages").fetchall()
     for database_treeview_value in treeview_data:
