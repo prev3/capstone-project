@@ -94,7 +94,8 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
     (database_connection, database_cursor) = get_database_cursor()
     treeview_data = database_cursor.execute("SELECT * FROM messages").fetchall()
     for database_treeview_value in treeview_data:
-        database_treeview.insert("", "end", text = "1", values = database_treeview_value)
+        value_tags = ["duplicate"] if database_treeview_value[-1] else []
+        database_treeview.insert("", "end", text = "1", values = database_treeview_value, tags = value_tags)
 
 def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: bool) -> None:
     data = [(treeview.set(item, column_name), item) for item in treeview.get_children("")]
@@ -119,6 +120,7 @@ for i, treeview_column in enumerate(treeview_columns):
     database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title(), command = lambda column = treeview_column: sort_treeview(database_treeview, column, False))
 database_treeview.grid(column = 0, row = 0, sticky = "EWNS")
 insert_treeview_data(database_treeview)
+database_treeview.tag_configure("duplicate", background="yellow")
 
 treeview_scrollabar = tkinter.ttk.Scrollbar(treeview_frame, orient = "vertical", command = database_treeview.yview)
 treeview_scrollabar.grid(column = 1, row = 0, sticky = "EWNS")
