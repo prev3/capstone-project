@@ -83,21 +83,25 @@ root.title("Test Sub")
 frame = tkinter.ttk.Frame(root, padding = 10)
 frame.grid(sticky = "EWNS")
 
-result_box = tkinter.Text(frame)
-result_box.grid(column = 0, row = 0, columnspan = 3)
+treeview_columns = ["message_id", "version", "item_id", "location", "quantity", "transaction_datetime", "transation_number", "duplicate"]
+database_treeview = tkinter.ttk.Treeview(frame, columns = treeview_columns, show = "headings")
+for i, treeview_column in enumerate(treeview_columns):
+    database_treeview.column("#" + str(i + 1), width = len(treeview_column) * 10)
+    database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title())
+database_treeview.grid(column = 0, row = 0, columnspan = 3)
 
-message = "test message"
-test_attribute = "test_attribute"
+result_box = tkinter.Text(frame, height = 5)
+result_box.grid(column = 0, row = 1, columnspan = 3, sticky = "EWNS")
 
 init_thread = threading.Thread(target = init_subscription, daemon = True)
 subscribe_button = tkinter.ttk.Button(frame, text = "Subscribe", command = lambda: request_thread_run(init_thread))
-subscribe_button.grid(column = 0, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
+subscribe_button.grid(column = 0, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 unsubscribe_button = tkinter.ttk.Button(frame, text = "Unsubscribe", command = kill_subscription)
-unsubscribe_button.grid(column = 1, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
+unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
-clear_button.grid(column = 2, row = 1, ipady = 25, pady = 5, sticky = "EWNS")
+clear_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
