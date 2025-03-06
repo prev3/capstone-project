@@ -83,7 +83,7 @@ def request_thread_run(thread) -> None:
     else:
         log_debug("Declining thread start request thread does not exist or is already running")
 
-def clear_text() -> None:
+def clear_log() -> None:
     result_box.delete(0.0, tkinter.END)
 
 def reset_treeview() -> None:
@@ -134,8 +134,8 @@ subscribe_button.grid(column = 0, row = 2, ipady = 25, pady = 5, sticky = "EWNS"
 unsubscribe_button = tkinter.ttk.Button(frame, text = "Unsubscribe", command = kill_subscription)
 unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
-clear_text_button = tkinter.ttk.Button(frame, text = "Clear Text", command = clear_text)
-clear_text_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+clear_log_button = tkinter.ttk.Button(frame, text = "Clear Log", command = clear_log)
+clear_log_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()

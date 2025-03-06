@@ -43,7 +43,7 @@ def run_publish(message: str, test_attribute: str) -> None:
         result_box.insert(tkinter.END, traceback.format_exc())
         publish_button.config(state = tkinter.ACTIVE)
 
-def clear_text() -> None:
+def clear_log() -> None:
     result_box.delete(0.0, tkinter.END)
 
 root = tkinter.Tk()
@@ -94,8 +94,8 @@ quantity_entry.grid(column = 1, row = 4, ipady = 0, pady = 5, sticky = "EWNS")
 publish_button = tkinter.ttk.Button(frame, text = "Publish", command = lambda: threading.Thread(target = lambda: run_publish(message, attributes)).start())
 publish_button.grid(column = 0, row = 5, ipady = 25, pady = 5, sticky = "EWNS")
 
-clear_button = tkinter.ttk.Button(frame, text = "Clear", command = clear_text)
-clear_button.grid(column = 1, row = 5, ipady = 25, pady = 5, sticky = "EWNS")
+clear_log_button = tkinter.ttk.Button(frame, text = "Clear Log", command = clear_log)
+clear_log_button.grid(column = 1, row = 5, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
