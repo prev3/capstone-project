@@ -31,7 +31,7 @@ def init_subscription() -> None:
         message_data = json.loads(message.data)
         message_attributes = message.attributes
         (database_connection, database_cursor) = get_database_cursor()
-        duplicate = bool(len(database_cursor.execute("SELECT * FROM messages WHERE message_id=?", str(message_data["message_id"])).fetchall()))
+        duplicate = bool(len(database_cursor.execute("SELECT * FROM messages WHERE message_id=?", [str(message_data["message_id"])]).fetchall()))
         data = [
             message_data["message_id"],
             message_attributes["version"],
