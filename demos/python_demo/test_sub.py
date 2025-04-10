@@ -111,6 +111,18 @@ def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: 
         treeview.move(item, "", index)
     treeview.heading(column_name, command = lambda: sort_treeview(treeview, column_name, not descending))
 
+def show_filter_menu(event: tkinter.Event) -> None:
+    column_number_str = database_treeview.identify_column(event.x)
+    row_number_str = database_treeview.identify_row(event.y) # empty string if in header
+    print(column_number_str, row_number_str)
+    if len(row_number_str) == 0:
+        print("column header")
+        context_menu = tkinter.Menu(root, tearoff=0)
+        context_menu.add_checkbutton(label="test")
+        context_menu.add_separator()
+        context_menu.add_command(label="Filter", command = lambda: print("hit"))
+        context_menu.tk_popup(event.x_root, event.y_root, 0)
+
 root = tkinter.Tk()
 root.title("Test Sub")
 
@@ -125,6 +137,7 @@ database_treeview = tkinter.ttk.Treeview(treeview_frame, columns = treeview_colu
 for i, treeview_column in enumerate(treeview_columns):
     database_treeview.column("#" + str(i + 1), width = len(treeview_column) * 10)
     database_treeview.heading(treeview_column, text = treeview_column.replace("_", " ").title(), command = lambda column = treeview_column: sort_treeview(database_treeview, column, False))
+    database_treeview.bind("<Button-3>", show_filter_menu)
 database_treeview.grid(column = 0, row = 0, sticky = "EWNS")
 insert_treeview_data(database_treeview)
 database_treeview.tag_configure("duplicate", background="yellow")
