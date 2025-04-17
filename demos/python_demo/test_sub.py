@@ -135,11 +135,30 @@ def filter_dialog(column_number_str) -> None:
     dialog = tkinter.Toplevel()
     dialog.wm_title("Window")
 
-    testbutton = tkinter.Label(dialog, text="Input")
-    testbutton.grid(row=0, column=0)
+    rows_used = 0
 
-    testbutton2 = tkinter.ttk.Button(dialog, text="Okay", command=dialog.destroy)
-    testbutton2.grid(row=1, column=0)
+    if column_type == int:
+        int_min_label = tkinter.Label(dialog, text = "Min:")
+        int_min_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
+        int_min_entry = tkinter.Entry(dialog)
+        int_min_entry.insert(0, "")
+        int_min_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
+
+        int_max_label = tkinter.Label(dialog, text = "Max:")
+        int_max_label.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
+        int_max_entry = tkinter.Entry(dialog)
+        int_max_entry.insert(0, "")
+        int_max_entry.grid(column = 1, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
+
+        rows_used = 2
+
+    filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter(dialog))
+    filter_button.grid(row=rows_used, column=0)
+    cancel_button = tkinter.ttk.Button(dialog, text="Cancel", command=dialog.destroy)
+    cancel_button.grid(row=rows_used, column=1)
+
+def apply_filter(dialog):
+    dialog.destroy()
 
 root = tkinter.Tk()
 root.title("Test Sub")
