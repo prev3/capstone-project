@@ -152,6 +152,9 @@ def filter_dialog(column_number_str) -> None:
 
         rows_used = 2
 
+        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_int(dialog, column_number_str, int_min_entry.get(), int_max_entry.get()))
+        filter_button.grid(row=rows_used, column=0)
+
     elif column_type == str:
         regex_query_label = tkinter.Label(dialog, text = "Regex:")
         regex_query_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
@@ -160,6 +163,9 @@ def filter_dialog(column_number_str) -> None:
         regex_query_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 1
+
+        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_str(dialog, column_number_str, regex_query_entry.get()))
+        filter_button.grid(row=rows_used, column=0)
 
     elif column_type == bool:
         true_button_result = tkinter.IntVar()
@@ -172,12 +178,19 @@ def filter_dialog(column_number_str) -> None:
 
         rows_used = 2
 
-    filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter(dialog))
-    filter_button.grid(row=rows_used, column=0)
+        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_bool(dialog, column_number_str, true_button_result, false_button_result))
+        filter_button.grid(row=rows_used, column=0)
+
     cancel_button = tkinter.ttk.Button(dialog, text="Cancel", command=dialog.destroy)
     cancel_button.grid(row=rows_used, column=1)
 
-def apply_filter(dialog):
+def apply_filter_int(dialog, column_number_str, int_min, int_max):
+    dialog.destroy()
+
+def apply_filter_str(dialog, column_number_str, regex_string):
+    dialog.destroy()
+
+def apply_filter_bool(dialog, column_number_str, true_filter, false_filter):
     dialog.destroy()
 
 root = tkinter.Tk()
