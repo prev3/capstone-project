@@ -116,12 +116,34 @@ def show_filter_menu(event: tkinter.Event) -> None:
     row_number_str = database_treeview.identify_row(event.y) # empty string if in header
     print(column_number_str, row_number_str)
     if len(row_number_str) == 0:
-        print("column header")
         context_menu = tkinter.Menu(root, tearoff=0)
         context_menu.add_checkbutton(label="test")
         context_menu.add_separator()
-        context_menu.add_command(label="Filter", command = lambda: print("hit"))
+        context_menu.add_command(label="Filter", command = lambda: filter_dialog(column_number_str))
         context_menu.tk_popup(event.x_root, event.y_root, 0)
+
+column_types = {
+    "#1": int,
+    "#2": int,
+    "#3": int,
+    "#4": str,
+    "#5": int,
+    "#6": str,
+    "#7": int,
+    "#8": bool,
+}
+
+def filter_dialog(column_number_str) -> None:
+    column_type = column_types[column_number_str]
+    print(column_number_str, column_type)
+    dialog = tkinter.Toplevel()
+    dialog.wm_title("Window")
+
+    testbutton = tkinter.Label(dialog, text="Input")
+    testbutton.grid(row=0, column=0)
+
+    testbutton2 = tkinter.ttk.Button(dialog, text="Okay", command=dialog.destroy)
+    testbutton2.grid(row=1, column=0)
 
 root = tkinter.Tk()
 root.title("Test Sub")
