@@ -200,7 +200,7 @@ frame = tkinter.ttk.Frame(root, padding = 10)
 frame.grid(sticky = "EWNS")
 
 treeview_frame = tkinter.ttk.Frame(frame)
-treeview_frame.grid(columnspan = 3, sticky = "EWNS")
+treeview_frame.grid(columnspan = 4, sticky = "EWNS")
 
 treeview_columns = ["message_id", "version", "item_id", "location", "quantity", "transaction_datetime", "transation_number", "duplicate"]
 database_treeview = tkinter.ttk.Treeview(treeview_frame, columns = treeview_columns, show = "headings")
@@ -228,6 +228,9 @@ unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWN
 
 clear_log_button = tkinter.ttk.Button(frame, text = "Clear Log", command = clear_log)
 clear_log_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+
+reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = reset_treeview)
+reset_view_button.grid(column = 3, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 root.update()
 root.mainloop()
