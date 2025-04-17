@@ -152,6 +152,20 @@ def filter_dialog(column_number_str) -> None:
 
         rows_used = 2
 
+    elif column_type == str:
+        pass
+
+    elif column_type == bool:
+        true_button_result = True
+        true_button = tkinter.Checkbutton(dialog, text="True", variable=true_button_result)
+        true_button.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
+
+        false_button_result = True
+        false_button = tkinter.Checkbutton(dialog, text="False", variable=false_button_result)
+        false_button.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
+
+        rows_used = 2
+
     filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter(dialog))
     filter_button.grid(row=rows_used, column=0)
     cancel_button = tkinter.ttk.Button(dialog, text="Cancel", command=dialog.destroy)
