@@ -153,7 +153,13 @@ def filter_dialog(column_number_str) -> None:
         rows_used = 2
 
     elif column_type == str:
-        pass
+        regex_query_label = tkinter.Label(dialog, text = "Regex:")
+        regex_query_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
+        regex_query_entry = tkinter.Entry(dialog)
+        regex_query_entry.insert(0, "")
+        regex_query_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
+
+        rows_used = 1
 
     elif column_type == bool:
         true_button_result = tkinter.IntVar()
