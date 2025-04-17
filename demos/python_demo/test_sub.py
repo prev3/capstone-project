@@ -116,11 +116,7 @@ def show_filter_menu(event: tkinter.Event) -> None:
     row_number_str = database_treeview.identify_row(event.y) # empty string if in header
     print(column_number_str, row_number_str)
     if len(row_number_str) == 0:
-        context_menu = tkinter.Menu(root, tearoff=0)
-        context_menu.add_checkbutton(label="test")
-        context_menu.add_separator()
-        context_menu.add_command(label="Filter", command = lambda: filter_dialog(column_number_str))
-        context_menu.tk_popup(event.x_root, event.y_root, 0)
+        filter_dialog(column_number_str)
 
 column_types = {
     "#1": int,
