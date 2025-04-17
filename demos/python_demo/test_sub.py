@@ -156,11 +156,11 @@ def filter_dialog(column_number_str) -> None:
         pass
 
     elif column_type == bool:
-        true_button_result = True
+        true_button_result = tkinter.IntVar()
         true_button = tkinter.Checkbutton(dialog, text="True", variable=true_button_result)
         true_button.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
-        false_button_result = True
+        false_button_result = tkinter.IntVar()
         false_button = tkinter.Checkbutton(dialog, text="False", variable=false_button_result)
         false_button.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
