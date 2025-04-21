@@ -93,6 +93,8 @@ def reset_treeview() -> None:
     database_treeview.delete(*database_treeview.get_children())
     insert_treeview_data(database_treeview)
 
+min_max_treeview = {}
+
 def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
     (database_connection, database_cursor) = get_database_cursor()
     treeview_data = database_cursor.execute("SELECT * FROM messages").fetchall()
@@ -113,6 +115,15 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
                     if bool(data_value) == True and not current_active_filter["filter"]["true"] or bool(data_value) == False and not current_active_filter["filter"]["false"]:
                         skip_row = True
                         continue
+
+            if type(data_value) == int or (type(data_value) == str and data_value.isdigit()):
+                if i in min_max_treeview:
+                    min_max_treeview[i]["min"] = min(min_max_treeview[i]["min"], int(data_value))
+                    min_max_treeview[i]["max"] = max(min_max_treeview[i]["max"], int(data_value))
+                else:
+                    min_max_treeview[i] = {"min": int(data_value), "max": int(data_value)}
+            else:
+                min_max_treeview[i] = None
 
         if skip_row:
             continue
@@ -167,11 +178,11 @@ def filter_dialog(column_number_str) -> None:
     rows_used = 0
 
     if column_type == int:
-        int_min_default = 0
+        int_min_default = min_max_treeview[column_index]["min"]
         if column_index in active_filter:
             int_min_default = active_filter[column_index]["filter"]["min"]
 
-        int_max_default = 10000
+        int_max_default = min_max_treeview[column_index]["max"]
         if column_index in active_filter:
             int_max_default = active_filter[column_index]["filter"]["max"]
 
