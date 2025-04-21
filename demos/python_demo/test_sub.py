@@ -230,7 +230,7 @@ treeview_scrollabar.grid(column = 1, row = 0, sticky = "EWNS")
 database_treeview.configure(yscrollcommand = treeview_scrollabar.set)
 
 result_box = tkinter.Text(frame, height = 5)
-result_box.grid(column = 0, row = 1, columnspan = 3, sticky = "EWNS")
+result_box.grid(column = 0, row = 1, columnspan = 4, sticky = "EWNS")
 
 init_thread = threading.Thread(target = init_subscription, daemon = True)
 subscribe_button = tkinter.ttk.Button(frame, text = "Subscribe", command = lambda: request_thread_run(init_thread))
