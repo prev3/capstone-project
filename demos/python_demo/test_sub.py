@@ -1,4 +1,5 @@
 import json
+import re
 import sqlite3
 import threading
 import tkinter
@@ -12,7 +13,7 @@ config = dotenv.dotenv_values("config.env")
 
 keep_subscription_alive = True
 
-active_filter = None
+active_filter = {}
 
 DATABASE_TABLE_NAME = "messages"
 
@@ -95,9 +96,29 @@ def reset_treeview() -> None:
 def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
     (database_connection, database_cursor) = get_database_cursor()
     treeview_data = database_cursor.execute("SELECT * FROM messages").fetchall()
-    for database_treeview_value in treeview_data:
-        value_tags = ["duplicate"] if database_treeview_value[-1] else []
-        database_treeview.insert("", "end", text = "1", values = database_treeview_value, tags = value_tags)
+    for database_treeview_values in treeview_data:
+        skip_row = False
+        for i, data_value in enumerate(database_treeview_values):
+            if i in active_filter:
+                current_active_filter = active_filter[i]
+                if current_active_filter["type"] == int:
+                    if data_value < current_active_filter["filter"]["min"] or data_value > current_active_filter["filter"]["max"]:
+                        skip_row = True
+                        continue
+                elif current_active_filter["type"] == str:
+                    if not re.search(current_active_filter["filter"]["regex"], data_value):
+                        skip_row = True
+                        continue
+                elif current_active_filter["type"] == bool:
+                    if bool(data_value) == True and not current_active_filter["filter"]["true"] or bool(data_value) == False and not current_active_filter["filter"]["false"]:
+                        skip_row = True
+                        continue
+
+        if skip_row:
+            continue
+
+        value_tags = ["duplicate"] if database_treeview_values[-1] else []
+        database_treeview.insert("", "end", text = "1", values = database_treeview_values, tags = value_tags)
 
 def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: bool) -> None:
     data = [(treeview.set(item, column_name), item) for item in treeview.get_children("")]
@@ -115,16 +136,11 @@ def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: 
 
 def reset_filter() -> None:
     global active_filter
-    active_filter = {
-        "int": None,
-        "str": None,
-        "bool": None,
-    }
+    active_filter = {}
 
 def show_filter_menu(event: tkinter.Event) -> None:
     column_number_str = database_treeview.identify_column(event.x)
     row_number_str = database_treeview.identify_row(event.y) # empty string if in header
-    print(column_number_str, row_number_str)
     if len(row_number_str) == 0:
         filter_dialog(column_number_str)
 
@@ -141,7 +157,7 @@ column_types = {
 
 def filter_dialog(column_number_str) -> None:
     column_type = column_types[column_number_str]
-    print(column_number_str, column_type)
+    column_index = int(column_number_str[1:]) - 1
     dialog = tkinter.Toplevel()
     dialog.wm_title("Window")
 
@@ -165,8 +181,8 @@ def filter_dialog(column_number_str) -> None:
 
         rows_used = 2
 
-        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_int(dialog, column_number_str, int_min_entry.get(), int_max_entry.get()))
-        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_int(dialog, column_index, int_min_entry.get(), int_max_entry.get()))
+        filter_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == str:
         regex_query_label = tkinter.Label(filter_frame, text = "Regex:")
@@ -177,33 +193,41 @@ def filter_dialog(column_number_str) -> None:
 
         rows_used = 1
 
-        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_str(dialog, column_number_str, regex_query_entry.get()))
-        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_str(dialog, column_index, regex_query_entry.get()))
+        filter_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == bool:
-        true_button_result = tkinter.IntVar()
+        true_button_result = tkinter.BooleanVar()
+        true_button_result.set(True)
         true_button = tkinter.Checkbutton(filter_frame, text="True", variable=true_button_result)
         true_button.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
-        false_button_result = tkinter.IntVar()
+        false_button_result = tkinter.BooleanVar()
+        false_button_result.set(True)
         false_button = tkinter.Checkbutton(filter_frame, text="False", variable=false_button_result)
         false_button.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 2
 
-        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_bool(dialog, column_number_str, true_button_result, false_button_result))
-        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_bool(dialog, column_index, true_button_result, false_button_result))
+        filter_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
     cancel_button = tkinter.ttk.Button(filter_frame, text="Cancel", command=dialog.destroy)
-    cancel_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
+    cancel_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
 
-def apply_filter_int(dialog, column_number_str, int_min, int_max):
+def apply_filter_int(dialog, column_index: int, int_min: int, int_max: int) -> None:
+    active_filter[column_index] = {"type": int, "filter": {"min": int_min, "max": int_max}}
+    reset_treeview()
     dialog.destroy()
 
-def apply_filter_str(dialog, column_number_str, regex_string):
+def apply_filter_str(dialog, column_index: int, regex_string: str) -> None:
+    active_filter[column_index] = {"type": str, "filter": {"regex": regex_string}}
+    reset_treeview()
     dialog.destroy()
 
-def apply_filter_bool(dialog, column_number_str, true_filter, false_filter):
+def apply_filter_bool(dialog, column_index: int, true_filter: bool, false_filter: bool) -> None:  # noqa: FBT001
+    active_filter[column_index] = {"type": bool, "filter": {"true": true_filter.get(), "false": false_filter.get()}}
+    reset_treeview()
     dialog.destroy()
 
 root = tkinter.Tk()
