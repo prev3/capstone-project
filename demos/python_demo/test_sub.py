@@ -12,6 +12,12 @@ config = dotenv.dotenv_values("config.env")
 
 keep_subscription_alive = True
 
+active_filter = {
+    "int": None,
+    "str": None,
+    "bool": None,
+}
+
 DATABASE_TABLE_NAME = "messages"
 
 def log_debug(message: str) -> None:
@@ -110,6 +116,13 @@ def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: 
     for index, (_, item) in enumerate(data):
         treeview.move(item, "", index)
     treeview.heading(column_name, command = lambda: sort_treeview(treeview, column_name, not descending))
+
+def reset_filter() -> None:
+    active_filter = {
+        "int": None,
+        "str": None,
+        "bool": None,
+    }
 
 def show_filter_menu(event: tkinter.Event) -> None:
     column_number_str = database_treeview.identify_column(event.x)
