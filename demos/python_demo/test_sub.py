@@ -12,11 +12,7 @@ config = dotenv.dotenv_values("config.env")
 
 keep_subscription_alive = True
 
-active_filter = {
-    "int": None,
-    "str": None,
-    "bool": None,
-}
+active_filter = None
 
 DATABASE_TABLE_NAME = "messages"
 
@@ -118,6 +114,7 @@ def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: 
     treeview.heading(column_name, command = lambda: sort_treeview(treeview, column_name, not descending))
 
 def reset_filter() -> None:
+    global active_filter
     active_filter = {
         "int": None,
         "str": None,
@@ -244,6 +241,8 @@ clear_log_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS"
 
 reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = reset_treeview)
 reset_view_button.grid(column = 3, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
+
+reset_filter()
 
 root.update()
 root.mainloop()
