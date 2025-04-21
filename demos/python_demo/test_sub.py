@@ -167,16 +167,24 @@ def filter_dialog(column_number_str) -> None:
     rows_used = 0
 
     if column_type == int:
+        int_min_default = 0
+        if column_index in active_filter:
+            int_min_default = active_filter[column_index]["filter"]["min"]
+
+        int_max_default = 10000
+        if column_index in active_filter:
+            int_max_default = active_filter[column_index]["filter"]["max"]
+
         int_min_label = tkinter.Label(filter_frame, text = "Min:")
         int_min_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
         int_min_entry = tkinter.Entry(filter_frame)
-        int_min_entry.insert(0, "")
+        int_min_entry.insert(0, int_min_default)
         int_min_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         int_max_label = tkinter.Label(filter_frame, text = "Max:")
         int_max_label.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
         int_max_entry = tkinter.Entry(filter_frame)
-        int_max_entry.insert(0, "")
+        int_max_entry.insert(0, int_max_default)
         int_max_entry.grid(column = 1, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 2
@@ -185,10 +193,14 @@ def filter_dialog(column_number_str) -> None:
         filter_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == str:
+        regex_query_default = ""
+        if column_index in active_filter:
+            regex_query_default = active_filter[column_index]["filter"]["regex"]
+
         regex_query_label = tkinter.Label(filter_frame, text = "Regex:")
         regex_query_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
         regex_query_entry = tkinter.Entry(filter_frame)
-        regex_query_entry.insert(0, "")
+        regex_query_entry.insert(0, regex_query_default)
         regex_query_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 1
@@ -197,13 +209,21 @@ def filter_dialog(column_number_str) -> None:
         filter_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == bool:
+        true_button_default = True
+        if column_index in active_filter:
+            true_button_default = active_filter[column_index]["filter"]["true"]
+
+        false_button_default = True
+        if column_index in active_filter:
+            false_button_default = active_filter[column_index]["filter"]["false"]
+
         true_button_result = tkinter.BooleanVar()
-        true_button_result.set(True)
+        true_button_result.set(true_button_default)
         true_button = tkinter.Checkbutton(filter_frame, text="True", variable=true_button_result)
         true_button.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         false_button_result = tkinter.BooleanVar()
-        false_button_result.set(True)
+        false_button_result.set(false_button_default)
         false_button = tkinter.Checkbutton(filter_frame, text="False", variable=false_button_result)
         false_button.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
