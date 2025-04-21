@@ -169,7 +169,7 @@ column_types = {
     "#8": bool,
 }
 
-def filter_dialog(column_number_str) -> None:
+def filter_dialog(column_number_str: str) -> None:
     column_type = column_types[column_number_str]
     column_index = int(column_number_str[1:]) - 1
     dialog = tkinter.Toplevel()
