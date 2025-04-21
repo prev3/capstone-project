@@ -145,54 +145,57 @@ def filter_dialog(column_number_str) -> None:
     dialog = tkinter.Toplevel()
     dialog.wm_title("Window")
 
+    filter_frame = tkinter.ttk.Frame(dialog, padding = 10)
+    filter_frame.grid(sticky = "EWNS")
+
     rows_used = 0
 
     if column_type == int:
-        int_min_label = tkinter.Label(dialog, text = "Min:")
+        int_min_label = tkinter.Label(filter_frame, text = "Min:")
         int_min_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
-        int_min_entry = tkinter.Entry(dialog)
+        int_min_entry = tkinter.Entry(filter_frame)
         int_min_entry.insert(0, "")
         int_min_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
-        int_max_label = tkinter.Label(dialog, text = "Max:")
+        int_max_label = tkinter.Label(filter_frame, text = "Max:")
         int_max_label.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
-        int_max_entry = tkinter.Entry(dialog)
+        int_max_entry = tkinter.Entry(filter_frame)
         int_max_entry.insert(0, "")
         int_max_entry.grid(column = 1, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 2
 
-        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_int(dialog, column_number_str, int_min_entry.get(), int_max_entry.get()))
-        filter_button.grid(row=rows_used, column=0)
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_int(dialog, column_number_str, int_min_entry.get(), int_max_entry.get()))
+        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == str:
-        regex_query_label = tkinter.Label(dialog, text = "Regex:")
+        regex_query_label = tkinter.Label(filter_frame, text = "Regex:")
         regex_query_label.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
-        regex_query_entry = tkinter.Entry(dialog)
+        regex_query_entry = tkinter.Entry(filter_frame)
         regex_query_entry.insert(0, "")
         regex_query_entry.grid(column = 1, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 1
 
-        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_str(dialog, column_number_str, regex_query_entry.get()))
-        filter_button.grid(row=rows_used, column=0)
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_str(dialog, column_number_str, regex_query_entry.get()))
+        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
 
     elif column_type == bool:
         true_button_result = tkinter.IntVar()
-        true_button = tkinter.Checkbutton(dialog, text="True", variable=true_button_result)
+        true_button = tkinter.Checkbutton(filter_frame, text="True", variable=true_button_result)
         true_button.grid(column = 0, row = 0, ipady = 0, pady = 5, sticky = "EWNS")
 
         false_button_result = tkinter.IntVar()
-        false_button = tkinter.Checkbutton(dialog, text="False", variable=false_button_result)
+        false_button = tkinter.Checkbutton(filter_frame, text="False", variable=false_button_result)
         false_button.grid(column = 0, row = 1, ipady = 0, pady = 5, sticky = "EWNS")
 
         rows_used = 2
 
-        filter_button = tkinter.ttk.Button(dialog, text="Filter", command=lambda: apply_filter_bool(dialog, column_number_str, true_button_result, false_button_result))
-        filter_button.grid(row=rows_used, column=0)
+        filter_button = tkinter.ttk.Button(filter_frame, text="Filter", command=lambda: apply_filter_bool(dialog, column_number_str, true_button_result, false_button_result))
+        filter_button.grid(row=rows_used, column=0, ipady = 0, pady = 5, sticky = "EWNS")
 
-    cancel_button = tkinter.ttk.Button(dialog, text="Cancel", command=dialog.destroy)
-    cancel_button.grid(row=rows_used, column=1)
+    cancel_button = tkinter.ttk.Button(filter_frame, text="Cancel", command=dialog.destroy)
+    cancel_button.grid(row=rows_used, column=1, ipady = 0, pady = 5, sticky = "EWNS")
 
 def apply_filter_int(dialog, column_number_str, int_min, int_max):
     dialog.destroy()
