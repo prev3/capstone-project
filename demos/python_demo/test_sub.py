@@ -266,7 +266,7 @@ unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWN
 clear_log_button = tkinter.ttk.Button(frame, text = "Clear Log", command = clear_log)
 clear_log_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
-reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = reset_treeview)
+reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = lambda: (reset_filter(), reset_treeview()))
 reset_view_button.grid(column = 3, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 reset_filter()
