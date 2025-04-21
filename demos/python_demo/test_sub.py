@@ -112,7 +112,10 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
                         skip_row = True
                         continue
                 elif current_active_filter["type"] == bool:
-                    if bool(data_value) == True and not current_active_filter["filter"]["true"] or bool(data_value) == False and not current_active_filter["filter"]["false"]:
+                    data_value_bool = bool(data_value)
+                    if type(data_value) == str and data_value:
+                        data_value_bool = bool(int(data_value))
+                    if (data_value_bool == True and not current_active_filter["filter"]["true"]) or (data_value_bool == False and not current_active_filter["filter"]["false"]):
                         skip_row = True
                         continue
 
@@ -128,7 +131,7 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
         if skip_row:
             continue
 
-        value_tags = ["duplicate"] if database_treeview_values[-1] else []
+        value_tags = ["duplicate"] if int(database_treeview_values[-1]) else []
         database_treeview.insert("", "end", text = "1", values = database_treeview_values, tags = value_tags)
 
 def sort_treeview(treeview: tkinter.ttk.Treeview, column_name: str, descending: bool) -> None:
