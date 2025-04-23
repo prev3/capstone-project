@@ -104,7 +104,7 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
             if i in active_filter:
                 current_active_filter = active_filter[i]
                 if current_active_filter["type"] == int:
-                    if data_value < current_active_filter["filter"]["min"] or data_value > current_active_filter["filter"]["max"]:
+                    if int(data_value) < int(current_active_filter["filter"]["min"]) or int(data_value) > int(current_active_filter["filter"]["max"]):
                         skip_row = True
                         continue
                 elif current_active_filter["type"] == str:
