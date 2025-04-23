@@ -31,7 +31,7 @@ def run_publish(message: str, test_attribute: str) -> None:
         message["item_id"] = item_id_entry.get()
         message["location"] = location_entry.get()
         message["quantity"] = quantity_entry.get()
-        message["transation_datetime"] = str(datetime.datetime.now(tz=datetime.timezone.utc))
+        message["transaction_datetime"] = str(datetime.datetime.now(tz=datetime.timezone.utc))
         random.seed(message["message_id"] + message["item_id"] + message["location"] + message["quantity"])
         message["transaction_number"] = random.randint(1, 10000)
         publish_button.config(state = tkinter.DISABLED)
@@ -61,7 +61,7 @@ message = {
     "item_id": None,
     "location": None,
     "quantity": None,
-    "transation_datetime": None,
+    "transaction_datetime": None,
     "transaction_number": None,
 }
 attributes = {

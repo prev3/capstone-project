@@ -29,7 +29,7 @@ def get_database_cursor() -> None:
     database_cursor = database_connection.cursor()
     table_check = database_cursor.execute("SELECT name FROM sqlite_master WHERE name='messages'")
     if table_check and not table_check.fetchone():
-        database_cursor.execute("CREATE TABLE messages(message_id, version, item_id, location, quantity, transaction_datetime, transation_number, duplicate)")
+        database_cursor.execute("CREATE TABLE messages(message_id, version, item_id, location, quantity, transaction_datetime, transaction_number, duplicate)")
     return (database_connection, database_cursor)
 
 def init_subscription() -> None:
@@ -48,7 +48,7 @@ def init_subscription() -> None:
             message_data["item_id"],
             message_data["location"],
             message_data["quantity"],
-            message_data["transation_datetime"],
+            message_data["transaction_datetime"],
             message_data["transaction_number"],
             duplicate,
         ]
@@ -280,7 +280,7 @@ frame.grid(sticky = "EWNS")
 treeview_frame = tkinter.ttk.Frame(frame)
 treeview_frame.grid(columnspan = 4, sticky = "EWNS")
 
-treeview_columns = ["message_id", "version", "item_id", "location", "quantity", "transaction_datetime", "transation_number", "duplicate"]
+treeview_columns = ["message_id", "version", "item_id", "location", "quantity", "transaction_datetime", "transaction_number", "duplicate"]
 database_treeview = tkinter.ttk.Treeview(treeview_frame, columns = treeview_columns, show = "headings")
 for i, treeview_column in enumerate(treeview_columns):
     database_treeview.column("#" + str(i + 1), width = len(treeview_column) * 10)
