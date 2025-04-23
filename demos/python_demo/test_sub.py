@@ -93,6 +93,11 @@ def reset_treeview() -> None:
     database_treeview.delete(*database_treeview.get_children())
     insert_treeview_data(database_treeview)
 
+def reset_treeview_headings(database_treeview: tkinter.ttk.Treeview) -> None:
+    for i, column in enumerate(database_treeview["columns"]):
+        new_column_header = column.replace("_", " ").replace("*", "").title()
+        database_treeview.heading(i, text=new_column_header)
+
 min_max_treeview = {}
 
 def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
@@ -102,6 +107,8 @@ def insert_treeview_data(database_treeview: tkinter.ttk.Treeview) -> None:
         skip_row = False
         for i, data_value in enumerate(database_treeview_values):
             if i in active_filter:
+                current_column_header = database_treeview["columns"][i].replace("_", " ").title()
+                database_treeview.heading(i, text="*" + current_column_header)
                 current_active_filter = active_filter[i]
                 if current_active_filter["type"] == int:
                     if int(data_value) < int(current_active_filter["filter"]["min"]) or int(data_value) > int(current_active_filter["filter"]["max"]):
@@ -300,7 +307,7 @@ unsubscribe_button.grid(column = 1, row = 2, ipady = 25, pady = 5, sticky = "EWN
 clear_log_button = tkinter.ttk.Button(frame, text = "Clear Log", command = clear_log)
 clear_log_button.grid(column = 2, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
-reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = lambda: (reset_filter(), reset_treeview()))
+reset_view_button = tkinter.ttk.Button(frame, text = "Reset View", command = lambda: (reset_filter(), reset_treeview_headings(database_treeview), reset_treeview()))
 reset_view_button.grid(column = 3, row = 2, ipady = 25, pady = 5, sticky = "EWNS")
 
 reset_filter()
