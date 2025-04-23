@@ -1,4 +1,4 @@
-# Python Demo
+# Python Pub/Sub Demo
 
 ## Setup
 
