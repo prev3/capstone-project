@@ -2,11 +2,19 @@
 
 ## Setup
 
-1. Run `setup_venv.sh` and `setup_config.sh`.
+1. Set up the gcloud CLI: https://cloud.google.com/sdk/docs/install.
+
+2. Set up ADC gcloud authentication: https://cloud.google.com/docs/authentication/set-up-adc-local-dev-environment.
+
+3. Run `setup_venv.sh` and `setup_config.sh`.
 
     On Windows you may need to run the commands from this script individually.
 
-2. Fill out the generated `config.env` file.
+4. Fill out the generated `config.env` file.
+
+    `topic` is the topic name in Google Pub/Sub.
+
+    `subscription_id` is the subscription name in Google Pub/Sub.
 
 ## Usage
 
