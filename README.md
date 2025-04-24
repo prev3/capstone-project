@@ -16,6 +16,13 @@
 
     `subscription_id` is the subscription name in Google Pub/Sub.
 
+    Example config:
+    ```
+    project_id="alpine-eon-498215-q2"
+    topic="Test_Topic"
+    subscription_id="Test_Sub"
+    ```
+
 ## Usage
 
 1. Run `run_test_pub.sh` and `run_test_sub.sh` at the same time (two separate terminals).
