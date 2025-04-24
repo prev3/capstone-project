@@ -10,7 +10,7 @@
 
     On Windows you may need to run the commands from this script individually.
 
-4. Fill out the generated `config.env` file.
+4. Fill out the generated `config.env` file. Values with spaces may need to be wrapped in double quotes.
 
     `topic` is the topic name in Google Pub/Sub.
 
