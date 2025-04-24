@@ -35,8 +35,14 @@
 
 4. Once the subscriber receives a message, filtering and sorting can be done.
 
-    Left click on the column headers to sort the columns ascending or descending.
+## Filtering and Sorting
 
-    Right click on the column headers to open the filter dialog. Fill in any filtering information desired in the dialog.
+- Left click on the column headers to sort the columns ascending or descending.
 
-    Boolean values can be sorted to show or hide `True` or `False`. Integers can be sorted with a min-max range. Strings can be filtered with regex matches (partial matches are used, append your query with `^` and prepend your query with `$` to only accept an exact match).
+- Right click on the column headers to open the filter dialog. Fill in any filtering information desired in the dialog.
+
+    Boolean values can be sorted to show or hide `True` or `False`.
+    
+    Integers can be sorted with a min-max range.
+    
+    Strings can be filtered with regex matches (partial matches are used, append your query with `^` and prepend your query with `$` to only accept an exact match).
